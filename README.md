@@ -1,11 +1,11 @@
-# Detecting Gender Bias in LinkedIn Job Listings
+# Detecting Gender Bias in Glassdoor Job Listings
 
-This repository contains code and resources for a data science project that aims to detect gender bias in job listings sourced from LinkedIn. The project utilizes machine learning techniques to analyze job descriptions and associated metadata to identify potential biases based on gender-specific language and job requirements.
+This repository contains code and resources for a data science project that aims to detect gender bias in job listings sourced from Glassdoor. The project utilizes machine learning techniques to analyze job descriptions and associated metadata to identify potential biases based on gender-specific language and job requirements.
 
 ## Project Overview
 
 The goal of this project is to:
-- Scrape job listings from LinkedIn, focusing on details such as job titles, descriptions, qualifications, and company information.
+- Scrape job listings from Glassdoor, focusing on details such as job titles, descriptions, qualifications, and company information.
 - Develop machine learning models to predict gender-associated biases in job listings.
 - Evaluate the models based on metrics such as precision, recall, and F1-score.
 - Provide insights and visualizations to interpret the results and identify potential biases.
@@ -42,7 +42,7 @@ The repository is structured as follows:
 
 ### Usage
 
-1. **Scraping LinkedIn Data**: Use the provided scripts or adapt them to scrape job listings from LinkedIn. Ensure compliance with LinkedIn's terms of service.
+1. **Scraping Glassdoor Data**: Use the provided scripts or adapt them to scrape job listings from Glassdoor. Note: This project originally was focused on Linkedin, however web scrapping is not compliant with LinkedIn's terms of service.
    
 2. **Data Preprocessing**: Clean and preprocess the scraped data using Jupyter notebooks provided in the `notebooks/` directory.
 
