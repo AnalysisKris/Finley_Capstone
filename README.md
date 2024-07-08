@@ -15,6 +15,14 @@ The goal of this project is to:
 The repository is structured as follows:
 
 - **data/**: Placeholder directory for storing scraped job listings and any processed data.
+   - Temporary Data Source: 
+      https://www.kaggle.com/datasets/kshitizregmi/jobs-and-job-description/data
+      - "The dataset is sourced from reputable job listing platforms and represents diverse industries and job roles." 
+   - Credits: glassdoor, merojob.com, indeed.com, etc.
+   - Format: CSV format with job titles and descriptions.
+
+License:
+This dataset is provided under the CC0: Public Domain License. Researchers are encouraged to explore and utilize this dataset responsibly for research and educational purposes only.
 - **notebooks/**: Jupyter notebooks for data preprocessing, model development, and result analysis.
 - **scripts/**: Python scripts for web scraping, data cleaning, feature engineering, and model evaluation.
 - **README.md**: This file, providing an overview of the project and instructions for usage.

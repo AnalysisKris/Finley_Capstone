@@ -1,3 +1,7 @@
+from selenium.common.exceptions import NoSuchElementException, ElementClickInterceptedException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
@@ -5,118 +9,96 @@ import time
 import pandas as pd
 
 def get_jobs(keyword, num_jobs, verbose, path, slp_time):
-    '''Gathers jobs as a dataframe, scraped from Glassdoor'''
+    options = webdriver.ChromeOptions()
+    options.add_argument("--start-minimized")
+    options.add_argument("--disable-extensions")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
 
-    # Setting up Chrome options
-    options = Options()
-    # Uncomment the line below if you'd like to scrape without a new Chrome window every time.
-    # options.add_argument('headless')
-    
-    # Change the path to where chromedriver is in your home folder.
     service = Service(path)
     driver = webdriver.Chrome(service=service, options=options)
     driver.set_window_size(1120, 1000)
-    
+
+    try:
+        # Clicking the first "selected" element (if any)
+        element = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, '.selected')))
+        element.click()
+    except NoSuchElementException:
+        print("No element with class 'selected' found to click.")
+    except ElementClickInterceptedException:
+        print("ElementClickInterceptedException: Element couldn't be clicked.")
+    except Exception as e:
+        print(f"Error clicking on element: {e}")
+
     url = f"https://www.glassdoor.com/Job/jobs.htm?suggestCount=0&suggestChosen=false&clickSource=searchBtn&typedKeyword={keyword}&sc.keyword={keyword}&locT=&locId=&jobType="
     driver.get(url)
+
     jobs = []
 
-    while len(jobs) < num_jobs:  # If true, should still be looking for new jobs.
-
+    while len(jobs) < num_jobs:
         time.sleep(slp_time)
 
-        # Test for the "Sign Up" prompt and get rid of it.
         try:
-            driver.find_element(By.XPATH, './/button[text()="Sign Up"]').click()
+            # Clicking the first "selected" element (if any)
+            element = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, '.selected')))
+            element.click()
+        except NoSuchElementException:
+            print("No element with class 'selected' found to click.")
         except ElementClickInterceptedException:
-            pass
+            print("ElementClickInterceptedException: Element couldn't be clicked.")
+        except Exception as e:
+            print(f"Error clicking on element: {e}")
 
         time.sleep(.1)
 
         try:
-            driver.find_element(By.XPATH, './/span[text()="Close"]').click()  # Clicking to close the pop-up.
-            print(' X out worked')
+            # Closing any pop-up modal
+            close_button = WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.CSS_SELECTOR, '[alt="Close"]')))
+            close_button.click()
+            print('x out worked')
         except NoSuchElementException:
-            print(' X out failed')
-            pass
+            print('x out failed')
+        except ElementClickInterceptedException:
+            print("ElementClickInterceptedException: Element couldn't be clicked.")
+        except Exception as e:
+            print(f"Error clicking close button: {e}")
 
-        # Going through each job on the page
-        job_buttons = driver.find_elements(By.XPATH, '/html/body/div[3]/div[1]/div[4]/div[2]/div[2]/div/div[1]/section/div[2]/div[1]')  # Job listings on the page.
+        job_buttons = driver.find_elements(By.CLASS_NAME, "jl")
         for job_button in job_buttons:
+            try:
+                job_button.click()  # Click each job listing
 
-            print(f"Progress: {len(jobs)}/{num_jobs}")
-            if len(jobs) >= num_jobs:
-                break
-
-            job_button.click()
-            time.sleep(1)
-            collected_successfully = False
-
-            while not collected_successfully:
+                # Example: Extract job title
                 try:
-                    company_name = driver.find_element(By.XPATH, '/html/body/div[3]/div[1]/div[4]/div[2]/div[2]/div/div[1]/section/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/a').text
-                    location = driver.find_element(By.XPATH, '/html/body/div[3]/div[1]/div[4]/div[2]/div[2]/div/div[1]/section/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/span').text
-                    job_title = driver.find_element(By.XPATH, '/html/body/div[3]/div[1]/div[4]/div[2]/div[2]/div/div[1]/section/div[2]/div[1]/div[1]/div[1]/div[1]/a').text
-                    job_description = driver.find_element(By.XPATH, '/html/body/div[3]/div[1]/div[4]/div[2]/div[2]/div/div[1]/section/div[2]/div[1]/div[1]/div[1]/div[2]').text
-                    collected_successfully = True
-                except:
-                    time.sleep(5)
-
-            try:
-                salary_estimate = driver.find_element(By.XPATH, '/html/body/div[3]/div[1]/div[4]/div[2]/div[2]/div/div[1]/section/div[2]/div[1]/div[1]/div[1]/div[3]/div[1]/span').text
-            except NoSuchElementException:
-                salary_estimate = -1  # Set a default value if salary is not found.
-
-            try:
-                rating = driver.find_element(By.XPATH, '/html/body/div[3]/div[1]/div[4]/div[2]/div[2]/div/div[1]/section/div[2]/div[1]/div[1]/div[1]/div[3]/div[2]/span').text
-            except NoSuchElementException:
-                rating = -1  # Set a default value if rating is not found.
-
-            # Printing for debugging
-            if verbose:
-                print(f"Job Title: {job_title}")
-                print(f"Salary Estimate: {salary_estimate}")
-                print(f"Job Description: {job_description[:500]}")
-                print(f"Rating: {rating}")
-                print(f"Company Name: {company_name}")
-                print(f"Location: {location}")
-
-            # Going to the Company tab...
-            try:
-                driver.find_element(By.XPATH, './/div[@class="tab" and @data-tab-type="overview"]').click()
-
-                try:
-                    headquarters = driver.find_element(By.XPATH, './/div[@class="infoEntity"]//label[text()="Headquarters"]//following-sibling::*').text
+                    job_title = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.XPATH, './/div[@class="jobInfoItem jobTitle"]/span')))
+                    jobs.append({"Job Title": job_title.text})
                 except NoSuchElementException:
-                    headquarters = -1
+                    print("Job element not found")
 
-                # Additional scraping logic for company details...
+                if len(jobs) >= num_jobs:
+                    break
+            except ElementClickInterceptedException:
+                print("ElementClickInterceptedException: Element couldn't be clicked.")
+            except Exception as e:
+                print(f"Error clicking job button: {e}")
 
-            except NoSuchElementException:  # Rarely, some job postings do not have the "Company" tab.
-                headquarters = -1
-                # Handle other company details...
-
-            if verbose:
-                print(f"Headquarters: {headquarters}")
-                # Print other company details...
-
-            jobs.append({
-                "Job Title": job_title,
-                "Salary Estimate": salary_estimate,
-                "Job Description": job_description,
-                "Rating": rating,
-                "Company Name": company_name,
-                "Location": location,
-                "Headquarters": headquarters,
-                # Add other fields to the dictionary
-            })
-
-        # Clicking on the "next page" button
         try:
-            driver.find_element(By.XPATH, './/li[@class="next"]').click()
+            # Clicking the next button to go to the next page
+            next_button = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, './/li[@class="next"]//a')))
+            next_button.click()
         except NoSuchElementException:
-            print(f"Scraping terminated before reaching target number of jobs. Needed {num_jobs}, got {len(jobs)}.")
+            print("Scraping terminated before reaching target number of jobs. Needed {}, got {}.".format(num_jobs, len(jobs)))
             break
+        except ElementClickInterceptedException:
+            print("ElementClickInterceptedException: Element couldn't be clicked.")
+        except Exception as e:
+            print(f"Error clicking next button: {e}")
 
-    driver.quit()  # Quit the driver at the end of scraping
-    return pd.DataFrame(jobs)  # This line converts the dictionary object into a pandas DataFrame.
+    driver.quit()  # Close the WebDriver after scraping is complete
+    return pd.DataFrame(jobs)
+
+# Example usage
+path = '/opt/homebrew/bin/chromedriver'
+df = get_jobs('data scientist', 10, False, path, 5)  # Adjust number of jobs and sleep time as needed
+df.to_csv('glassdoor_jobs.csv', index=False)
