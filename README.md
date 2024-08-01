@@ -106,10 +106,10 @@ The source dataset was further transformed for the purposes of this project.
 ### Results
 
 - **Random Forest Model:**
-  - Accuracy: 74.4%
-  - Precision (Gender_Bias = 1): 40%
-  - Recall (Gender_Bias = 1): 4%
-  - F1-score (Gender_Bias = 1): 7%
+  - Accuracy: 91.3%
+  - Precision (Gender_Bias = 1): 100%
+  - Recall (Gender_Bias = 1): 70%
+  - F1-score (Gender_Bias = 1): 82%
 
 - **K-Nearest Neighbors Model:**
   - Accuracy: 72.3%
@@ -119,6 +119,6 @@ The source dataset was further transformed for the purposes of this project.
 
 ### Conclusion
 
-The project successfully implemented a comprehensive machine learning pipeline to detect gender bias in job descriptions. Through advanced preprocessing, feature engineering, and careful handling of class imbalance, the models developed showed promising results. Ongoing efforts will focus on further refining the models and exploring additional techniques to improve the detection of the minority class.
+The project successfully implemented a machine learning pipeline to detect gender bias in job descriptions. Advanced preprocessing, feature engineering, and handling of class imbalance led to promising results. Future work will focus on refining the models, incorporating more sophisticated NLP techniques, expanding the dataset, and exploring additional bias mitigation strategies.
 
 
