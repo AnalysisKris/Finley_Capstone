@@ -116,6 +116,7 @@ The source dataset was further transformed for the purposes of this project.
   - Precision (Gender_Bias = 1): 35%
   - Recall (Gender_Bias = 1): 8%
   - F1-score (Gender_Bias = 1): 13%
+<img width="552" alt="RF Results" src="https://github.com/user-attachments/assets/95173142-a056-4e98-b284-f5fdc65ef43c">
 
 ### Conclusion
 
