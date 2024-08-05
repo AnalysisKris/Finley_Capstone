@@ -115,18 +115,6 @@ The optimal hyperparameters for the Random Forest model were determined using Gr
     | Macro Avg | 0.87  | 0.87   | 0.87     | 149     |
     | Weighted Avg | 0.87 | 0.87 | 0.87     | 149     |
 
-- **ROC Curve**: 
-
-    ![ROC Curve](roc_curve.png)
-
-    The AUC score was 0.92, indicating strong performance in distinguishing between classes.
-
-- **Precision-Recall Curve**:
-
-    ![Precision-Recall Curve](pr_curve.png)
-
-    The AUC score was 0.93, reflecting the model's precision and recall.
-
 - **Feature Importance**:
 
 The analysis of feature importance revealed that the most influential features in predicting gender bias were:
