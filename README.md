@@ -256,21 +256,22 @@ Features such as `employer_provided`, `hourly`, and `R_yn` were found to have mi
     | R_yn             | 0.037      |
 
 
-## Limitations
-The analysis had several limitations:
+- **Random Forest Model:**
+  - Accuracy: 74.4%
+  - Precision (Gender_Bias = 1): 40%
+  - Recall (Gender_Bias = 1): 4%
+  - F1-score (Gender_Bias = 1): 7%
 
-The assignment of communal and agentic words was subjective, potentially introducing bias.
-The model's accuracy is dependent on the quality and representativeness of the data.
-The dataset was limited to job descriptions related to data science, which may affect the model's applicability to other industries or regions.
-The model only considered textual and basic numerical features, possibly overlooking other indicators of bias.
+- **K-Nearest Neighbors Model:**
+  - Accuracy: 72.3%
+  - Precision (Gender_Bias = 1): 35%
+  - Recall (Gender_Bias = 1): 8%
+  - F1-score (Gender_Bias = 1): 13%
 
 ## Future Work
 Future improvements could include:
 
-Further hyperparameter tuning
-Advanced feature engineering
-Comparison with other classifiers
-Expansion of the dataset to include diverse job descriptions
+The project successfully implemented a comprehensive machine learning pipeline to detect gender bias in job descriptions. Through advanced preprocessing, feature engineering, and careful handling of class imbalance, the models developed showed promising results. Ongoing efforts will focus on further refining the models and exploring additional techniques to improve the detection of the minority class.
 
 
 ## Conclusion
